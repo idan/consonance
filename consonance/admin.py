@@ -32,17 +32,52 @@ from django.contrib import admin
 from consonance.models import *
 
 
-class VanillaAdmin(admin.ModelAdmin):
-    pass
+#class VanillaAdmin(admin.ModelAdmin):
+#    pass
+#admin.site.register(User, VanillaAdmin)
+#admin.site.register(Service, VanillaAdmin)
+#admin.site.register(Via, VanillaAdmin)
+#admin.site.register(Room, VanillaAdmin)
 
-admin.site.register(User, VanillaAdmin)
-admin.site.register(Service, VanillaAdmin)
-admin.site.register(Via, VanillaAdmin)
-admin.site.register(Room, VanillaAdmin)
-admin.site.register(Entry, VanillaAdmin)
-admin.site.register(Like, VanillaAdmin)
-admin.site.register(Comment, VanillaAdmin)
-admin.site.register(Media, VanillaAdmin)
-admin.site.register(Thumbnail, VanillaAdmin)
-admin.site.register(Content, VanillaAdmin)
-admin.site.register(Enclosure, VanillaAdmin)
+class CommentInline(admin.TabularInline):
+    model = Comment
+    extra = 0
+
+class LikeInline(admin.TabularInline):
+    model = Like
+    extra = 0
+
+class MediaInline(admin.TabularInline):
+    model = Media
+    extra = 0
+    
+    
+class EntryAdmin(admin.ModelAdmin):
+    date_hierarchy = 'published'
+    inlines = [
+        LikeInline,
+        CommentInline,
+        MediaInline,
+    ]
+admin.site.register(Entry, EntryAdmin)
+
+
+class EnclosureInline(admin.TabularInline):
+    model = Enclosure
+    extra = 0
+
+class ThumbnailInline(admin.TabularInline):
+    model = Thumbnail
+    extra = 0    
+
+class ContentInline(admin.TabularInline):
+    model = Content
+    extra = 0
+
+class MediaAdmin(admin.ModelAdmin):
+    inlines = [
+        ContentInline,
+        ThumbnailInline,
+        EnclosureInline,
+    ]
+admin.site.register(Media, MediaAdmin)

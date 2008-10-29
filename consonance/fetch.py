@@ -34,6 +34,7 @@ from consonance.models import *
 import logging
 import sys
 
+logger = logging.getLogger("Fetch")
 
 def handle_exception(user, errortext):
     exc_type, exc_value = sys.exc_info()[:2]
@@ -52,25 +53,55 @@ def process_user(rawuser):
         user.save()
     return user
 
+def process_media(entry, rawmedia):
+    logger.debug("Processing media %s" % rawmedia['link'])
+    mediaobj, mediacreated = Media.objects.get_or_create(
+        link=rawmedia['link'],
+        entry=entry)
+    if mediacreated:
+        if 'title' in rawmedia:
+            mediaobj.title = rawmedia['title']
+        if 'player' in rawmedia:
+            mediaobj.player = rawmedia['player']
+    mediaobj.save()
+    
+    for thumbnail in rawmedia['thumbnails']:
+        thumbobj, thumbcreated = Thumbnail.objects.get_or_create(
+            url=thumbnail['url'],
+            width=thumbnail['width'],
+            height=thumbnail['height'],
+            media=mediaobj)
+        thumbobj.save()
+    
+    for content in rawmedia['content']:
+        logger.debug(content)
+        contentobj, contentcreated = Content.objects.get_or_create(
+            url=content['url'],
+            media=mediaobj)
+        if contentcreated:
+            contentobj.mimetype = content['type']
+            contentobj.width = content['width']
+            contentobj.height = content['height']
+        contentobj.save()
+    
+    if 'enclosures' in rawmedia and rawmedia['enclosures'] is not None:
+        for enclosure in rawmedia['enclosures']:
+            enclosureobj, enclosurecreated = Enclosure.objects.get_or_create(
+                url=enclosure['url'],
+                media=mediaobj)
+            if enclosurecreated:
+                enclosureobj.mimetype = enclosure['type']
+                enclosureobj.length = enclosure['length']
+            enclosureobj.save()
+    
+    return mediaobj
+    
+
 def process_entry(entry):
     logger.debug("Processing entry %s" % entry['id'])
-    obj, created = Entry.objects.get_or_create(id=entry['id'])
-    
-    # skip if already exists and not updated
-    if not created:
-        if entry['updated'] == obj.updated:
-            return
-    
-    # basic fields
-    obj.title = entry['title']
-    obj.link = entry['link']
-    obj.published = entry['published']
-    obj.updated = entry['updated']
-    obj.hidden = entry['hidden']
-    obj.anonymous = entry['anonymous']
     
     # fk user field
-    obj.user = process_user(entry['user'])
+    user = process_user(entry['user'])
     
     # fk service field
     service, servicecreated = Service.objects.get_or_create(
@@ -80,65 +111,97 @@ def process_entry(entry):
         service.iconurl = entry['service']['iconUrl']
         service.profileurl = entry['service']['profileUrl']
         service.save()
-    obj.service = service
+    
+    entryobj, created = Entry.objects.get_or_create(
+        id=entry['id'],
+        user=user,
+        service=service)
+    
+    # skip if already exists and not updated
+    if not created:
+        if entry['updated'] == entry_obj.updated:
+            return
+    
+    # basic fields
+    entryobj.title = entry['title']
+    entryobj.link = entry['link']
+    entryobj.published = entry['published']
+    entryobj.updated = entry['updated']
+    entryobj.hidden = entry['hidden']
+    entryobj.anonymous = entry['anonymous']
     
     # fk via field, if present
-    if entry['via']:
+    if 'via' in entry:
         via, viacreated = Via.objects.get_or_create(name=entry['via']['name'])
         if viacreated:
             via.url = entry['via']['url']
             via.save()
-        obj.via = via
+        entryobj.via = via
     
     # fk room field, if present
-    if entry['room']:
+    if 'room' in entry:
         room, roomcreated = Room.objects.get_or_create(id=entry['room']['id'])
         if roomcreated:
             room.name = entry['room']['name']
             room.nickname = entry['room']['nickname']
             room.url = entry['room']['url']
             room.save()
-        obj.room = room
+        entryobj.room = room
     
-    obj.save()
+    entryobj.save()
     
     # comments
     for comment in entry['comments']:
-        comment, commentcreated = Comment.objects.get_or_create(
-            id=comment['id'])
+        commentuser = process_user(comment['user'])
+        commentobj, commentcreated = Comment.objects.get_or_create(
+            id=comment['id'],
+            user=commentuser,
+            entry=entryobj)
         if commentcreated:
-            comment.date = comment['date']
-            comment.body = comment['body']
-            comment.user = process_user(comment['user'])
-            comment.entry = obj
-            comment.save()
+            commentobj.date = comment['date']
+            commentobj.body = comment['body']
+            commentobj.save()
     
     # likes
     for like in entry['likes']:
         likeuser = process_user(like['user'])
         like, likecreated = Like.objects.get_or_create(
             date=like['date'],
-            user=likeuser)
-        like.entry = obj
+            user=likeuser,
+            entry=entryobj)
         like.save()
-        
+    
+    # media
+    for media in entry['media']:
+        process_media(entryobj, media)
+            
 
 def fetch():
-    logger = logging.getLogger("Fetch")
-    if not settings.CONSONANCE_USERS:
-        logger.error("No users: settings.CONSONANCE_USERS is undefined or empty.")
-        raise ImproperlyConfigured()
+    try:
+        import friendfeed
+    except ImportError:
+        logger.error("Aborting fetch: unable to import friendfeed api.")
+        return
     
-    logger.info("Commencing fetch for %n users." % 
+    if not hasattr(settings, 'CONSONANCE_USERS'):
+        logger.error("Aborting fetch: settings.CONSONANCE_USERS is undefined or empty.")
+        return
+    
+    logger.info("Commencing fetch for %s users." % 
                 settings.CONSONANCE_USERS.__len__())
     
     api = friendfeed.FriendFeed()
     for user in settings.CONSONANCE_USERS:
         try:
             raw = api.fetch_user_feed(user)
+            #import pickle
+            #pickle_file = open('ffdata.pickle', 'rb')
+            #raw = pickle.load(pickle_file)
         except:
             handle_exception(user, "failed to fetch activity")
             continue
+        finally:
+            pickle_file.close()
         
         if not raw['entries']:
             logger.info('No activity available for user "%s".' % user)

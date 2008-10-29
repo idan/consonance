@@ -50,7 +50,7 @@ class Service(models.Model):
     """A FriendFeed Service."""
     id = models.CharField(blank=False, primary_key=True, max_length=36)
     name = models.CharField(blank=True, max_length=80)
-    url = models.URLField(blank=True, verify_exists=False, max_length=255)
+    iconurl = models.URLField(blank=True, verify_exists=False, max_length=255)
     profileurl = models.URLField(blank=True, verify_exists=False, max_length=255)
     
     class Meta:
@@ -100,8 +100,8 @@ class Entry(models.Model):
     anonymous = models.BooleanField(default=False)
     user = models.ForeignKey(User)
     service = models.ForeignKey(Service)
-    via = models.ForeignKey(Via)
-    room = models.ForeignKey(Room)
+    via = models.ForeignKey(Via, blank=True, null=True)
+    room = models.ForeignKey(Room, blank=True, null=True)
     
     class Meta:
         ordering = ["-published"]
@@ -138,13 +138,13 @@ class Comment(models.Model):
         verbose_name, verbose_name_plural = "comment", "comments"
     
     def __unicode__(self):
-        return u"Comment"
+        return u"%s: %s" % (self.entry, self.id)
 
 
 class Media(models.Model):
     """A FriendFeed media item"""
     title = models.CharField(blank=True, max_length=255)
-    player = models.URLField(blank=True, verify_exists=False, max_length=255)
+    player = models.URLField(blank=True, null=True, verify_exists=False, max_length=255)
     link = models.URLField(blank=False, verify_exists=False, max_length=255)
     entry = models.ForeignKey(Entry)
     
@@ -174,9 +174,9 @@ class Thumbnail(models.Model):
 class Content(models.Model):
     """A FriendFeed content link, referenced by a Media item."""
     url = models.URLField(blank=False, verify_exists=False, max_length=255)
-    mimetype = models.CharField(blank=False, max_length=80)
-    width = models.IntegerField(blank=False, null=False)
-    height = models.IntegerField(blank=False, null=False)
+    mimetype = models.CharField(blank=True, max_length=80)
+    width = models.IntegerField(blank=True, null=True)
+    height = models.IntegerField(blank=True, null=True)
     media = models.ForeignKey(Media)
     
     class Meta:
@@ -190,8 +190,8 @@ class Content(models.Model):
 class Enclosure(models.Model):
     """A FriendFeed media enclosure, referenced by a Media item."""
     url = models.URLField(blank=False, verify_exists=False, max_length=255)
-    mimetype = models.CharField(blank=False, max_length=80)
-    length = models.CharField(blank=False, max_length=80) # TODO: Have no idea about the datatype here.
+    mimetype = models.CharField(blank=True, max_length=80)
+    length = models.CharField(blank=True, max_length=80) # TODO: Have no idea about the datatype here.
     media = models.ForeignKey(Media)
     
     class Meta:
