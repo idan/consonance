@@ -3,5 +3,5 @@
 .DS_Store
 build/
 dist/
-djangregator.egg-info/
+consonance.egg-info/
 ez_setup.py
