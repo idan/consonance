@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/" />
+<title>Consonance</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left {
+  clear: left }
+
+img.align-right {
+  clear: right }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="consonance">
+<h1 class="title">Consonance</h1>
+<h2 class="subtitle" id="a-django-app-for-consuming-public-friendfeed-streams">A django app for consuming public FriendFeed streams</h2>
+
+<div class="section" id="about">
+<h1>About</h1>
+<p><a class="reference external" href="http://www.friendfeed.com">FriendFeed</a> is a fantastic service which does all of the hard work in aggregating and &quot;normalizing&quot; (for lack of a better description) all of the online activity we generate on socal sites like Flickr, YouTube, et al.</p>
+<p><em>Consonance</em> is merely a set of django models which mirrors the structure set forth in the <a class="reference external" href="http://code.google.com/p/friendfeed-api/wiki/ApiDocumentation">FriendFeed API Documentation</a> and a convenient cron-callable script for fetching updates from FriendFeed. I imagine that it will be most useful in presenting a lifestream to readers of your blog or similar. How you display the content is up to you -- there are no views or templates included with this application.</p>
+</div>
+<div class="section" id="license-how-to-contribute">
+<h1>License &amp; How to Contribute</h1>
+<p>Sad that these two subjects rarely go together in a README. They should.</p>
+<p>Consonance is yours to use, modify, and redistribute according to the terms of the BSD license, the full text of which is in a file named <tt class="docutils literal"><span class="pre">LICENSE.txt</span></tt>, which should be in the same directory as this readme.</p>
+<p>Consonance is hosted on <a class="reference external" href="http://www.github.com">github</a>, with issuetracking supplied by the equally-lovely <a class="reference external" href="http://www.lighthouseapp.com/">lighthouse</a>. It is ridiculously easy to contribute code, and it is ridiculously easy to fork off your own branch.</p>
+<ul class="simple">
+<li>Homepage &amp; Source: <a class="reference external" href="http://github.com/idangazit/consonance">http://github.com/idangazit/consonance</a></li>
+<li>Issuetracker: <a class="reference external" href="http://http://pixane.lighthouseapp.com/projects/18943-consonance/">http://http://pixane.lighthouseapp.com/projects/18943-consonance/</a></li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h1>Usage</h1>
+<div class="section" id="requirements">
+<h2>Requirements</h2>
+<p>Consonance requires:</p>
+<ul class="simple">
+<li>Django 1.0</li>
+<li>Python 2.5</li>
+<li><a class="reference external" href="http://code.google.com/p/friendfeed-api">friendfeed-api</a></li>
+</ul>
+<p>It might work with python &lt; 2.5 but I haven't tested and don't intend to. If some kind soul verifies that it works on older python versions I'll note it here, but I don't plan on spending time supporting such a configuration.</p>
+</div>
+<div class="section" id="getting-consonance">
+<h2>Getting Consonance</h2>
+<p><strong>Using easy_install_</strong>: run <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">consonance</span></tt> from your favorite shell. The latest version of consonance will be fetched and installed from <a class="reference external" href="http://pypi.python.org/pypi/consonance">PyPI</a>.</p>
+<p><strong>From source</strong>: get yourself a copy of consonance from the <a class="reference external" href="http://github.com/idangazit/consonance">homepage</a>. If you're comfortable with git, then clone yourself a copy. If you just want a tarball, click on the &quot;download&quot; button near the top of the page, download a .zip or tarball, and unpack it somewhere convenient. Either way, you should end up with a directory looking something like this:</p>
+<pre class="literal-block">
+consonance
+|- LICENSE.txt
+|- README.rst
+|- README.html
+|- consonance_fetch.py
+|- setup.py
+|- ez_setup.py
+|- consonance
+   |- __init__.py
+   |- admin.py
+   |- fetch.py
+   |- models.py
+   |- views.py
+</pre>
+<p>Put the inner <tt class="docutils literal"><span class="pre">consonance</span></tt> directory somewhere on your python path. You can copy it to your django directory, to your site-packages directory. You can also just run <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt>.</p>
+<p>You will also need to make use of the <tt class="docutils literal"><span class="pre">consonance_fetch.py</span></tt> script to fetch updates, so put that somewhere on your <tt class="docutils literal"><span class="pre">$PATH</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="using-consonance">
+<h1>Using Consonance</h1>
+<p>Make sure to add consonance to the <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> list in <tt class="docutils literal"><span class="pre">settings.py</span></tt>.</p>
+<p>Consonance will look for a list or tuple of friendfeed usernames called <tt class="docutils literal"><span class="pre">CONSONANCE_USERS</span></tt> in your project's <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
+<pre class="literal-block">
+CONSONANCE_USERS = (
+    'joe_user',
+    'jane_user',
+)
+</pre>
+<p>Make sure to add at least one name to <tt class="docutils literal"><span class="pre">CONSONANCE_USERS</span></tt>.</p>
+<p>Consonance <em>does not</em> perform fetches automatically. You've got to do it yourself, using a script called <tt class="docutils literal"><span class="pre">consonance_fetch.py</span></tt>. If you installed consonance using easy_install, then it should be present on your path. You can invoke the script as follows:</p>
+<pre class="literal-block">
+consonance_fetch.py --projectpath=&quot;/path/to/my/django/project&quot;
+</pre>
+<p>The <tt class="docutils literal"><span class="pre">projectpath</span></tt> argument should contain the path to your django project, which is usually wherever your project's <tt class="docutils literal"><span class="pre">settings.py</span></tt> resides.</p>
+<p>Every time the script is run, it fetches the new updates for each of the users specified in the <tt class="docutils literal"><span class="pre">CONSONANCE_USERS</span></tt>. You'll probably want to run this script periodically via a cron job or similar.</p>
+<p><strong>Be nice to FriendFeed's servers. You probably don't generate new content more than once every ten minutes. If you call consonance_fetch.py too often, eventually FriendFeed's API will throttle/ignore you.</strong></p>
+<p>If you want to see more about what <tt class="docutils literal"><span class="pre">consonance_fetch.py</span></tt> can do, run it as follows:</p>
+<pre class="literal-block">
+consonance_fetch.py --help
+</pre>
+</div>
+<div class="section" id="history">
+<h1>History</h1>
+<p>Originally I wanted an easy way to build a &quot;lifestream&quot; application in Django. Naturally, I took the long and stupid route. Originally starting with FriendFeed, I eventually decided (for reasons I can't recall now) that I should Build My Own, and boldly created <a class="reference external" href="http://github.com/idangazit/djangregator/">Djangregator</a>, which abandoned FriendFeed and embraced a pluggable-backend model, with one backend for each of the supported online services. I wrote three such backends (Twitter, Flickr, Delicious).</p>
+<p>Since the ultimate goal of Djangregator was to provide a lifestream for a blog, I started looking at <a class="reference external" href="http://oembed.com/">oembed</a> support, and <a class="reference external" href="http://code.google.com/p/django-oembed/">django-oembed</a>, so users could easily embed media instead of just a link to some media. Then I got to thinking about &quot;batching&quot; -- what happens when you upload 52 images to Flickr? Should there be 52 separate entries that the user needs to deal with at display-time?</p>
+<dl class="docutils">
+<dt>It turns out that FriendFeed already:</dt>
+<dd><ul class="first last simple">
+<li>Does all of this for you</li>
+<li>Does it for a heckuva lot more services than the three I cobbled together</li>
+<li>And probably does it in a more robust, bug-free fashion given their userbase</li>
+<li>Probably doesn't need to worry about API rate-limiting as it's a big-name consumer</li>
+<li>Hands me the kind of embeddable media info I would have to use oembed for...</li>
+<li>... but also gives it to me for services that don't support oembed (I'm lookin' at you, YouTube)</li>
+<li>Deals with batching!</li>
+<li>Deals with service-specific date and time parsing (WTF? Can't everybody just agree on ISO8601?)</li>
+<li>For that matter, gives all datetimes normalized to UTC</li>
+<li>Makes tea and fetches your slippers</li>
+</ul>
+</dd>
+</dl>
+<p>In retrospect, <a class="reference external" href="http://github.com/idangazit/djangregator/">Djangregator</a> was a good learning experience. I'm glad I came full-circle, though. Thank you FriendFeed!</p>
+<div class="section" id="naming">
+<h2>Naming</h2>
+<p>Going with the jazz themes of Django, and the fact that FriendFeed shines at pulling together the disparate elements of your online life:</p>
+<p><strong>CONSONANCE</strong> | <em>ˈkänsənəns</em></p>
+<p><em>noun</em></p>
+<dl class="docutils">
+<dt>agreement or compatibility between opinions or actions <span class="classifier-delimiter">:</span> <span class="classifier"><em>consonance between conservation measures and existing agricultural practice.</em></span></dt>
+<dd><ul class="first last simple">
+<li>the recurrence of similar sounds, esp. consonants, in close proximity (chiefly as used in prosody).</li>
+<li><em>Music</em> the combination of notes that are in harmony with each other due to the relationship between their frequencies.</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</body>
+</html>
