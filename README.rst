@@ -3,7 +3,7 @@ Consonance
 ==========
 
 -----------------------------------------------------
-A django app for consuming public friendfeed streams
+A django app for consuming public FriendFeed streams
 -----------------------------------------------------
 
 
@@ -26,12 +26,88 @@ Consonance is yours to use, modify, and redistribute according to the terms of t
 
 Consonance is hosted on github_, with issuetracking supplied by the equally-lovely lighthouse_. It is ridiculously easy to contribute code, and it is ridiculously easy to fork off your own branch.
 
-* Homepage: http://github.com/idangazit/consonance/wiki
-* Source: http://github.com/idangazit/consonance
+* Homepage & Source: http://github.com/idangazit/consonance
 * Issuetracker: http://http://pixane.lighthouseapp.com/projects/18943-consonance/
 
 .. _github: http://www.github.com
 .. _lighthouse: http://www.lighthouseapp.com/
+
+Usage
+=====
+
+Requirements
+------------
+
+Consonance requires:
+
+* Django 1.0
+* Python 2.5
+* `friendfeed-api`_
+
+.. _`friendfeed-api`: http://code.google.com/p/friendfeed-api
+
+It might work with python < 2.5 but I haven't tested and don't intend to. If some kind soul verifies that it works on older python versions I'll note it here, but I don't plan on spending time supporting such a configuration.
+
+Getting Consonance
+------------------
+
+**Using easy_install_**: run ``easy_install consonance`` from your favorite shell. The latest version of consonance will be fetched and installed from PyPI_.
+
+.. _easy_install: http://peak.telecommunity.com/DevCenter/EasyInstall
+.. _PyPI: http://pypi.python.org/pypi/consonance
+
+
+**From source**: get yourself a copy of consonance from the homepage_. If you're comfortable with git, then clone yourself a copy. If you just want a tarball, click on the "download" button near the top of the page, download a .zip or tarball, and unpack it somewhere convenient. Either way, you should end up with a directory looking something like this::
+
+    consonance
+    |- LICENSE.txt
+    |- README.rst
+    |- README.html
+    |- consonance_fetch.py
+    |- setup.py
+    |- ez_setup.py
+    |- consonance
+       |- __init__.py
+       |- admin.py
+       |- fetch.py
+       |- models.py
+       |- views.py
+
+.. _homepage: http://github.com/idangazit/consonance
+
+Put the inner ``consonance`` directory somewhere on your python path. You can copy it to your django directory, to your site-packages directory. You can also just run ``python setup.py install``.
+
+You will also need to make use of the ``consonance_fetch.py`` script to fetch updates, so put that somewhere on your ``$PATH``.
+
+
+Using Consonance
+================
+
+Make sure to add consonance to the ``INSTALLED_APPS`` list in ``settings.py``.
+
+Consonance will look for a list or tuple of friendfeed usernames called ``CONSONANCE_USERS`` in your project's ``settings.py``::
+    
+    CONSONANCE_USERS = (
+        'joe_user',
+        'jane_user',
+    )
+
+Make sure to add at least one name to ``CONSONANCE_USERS``.
+
+Consonance *does not* perform fetches automatically. You've got to do it yourself, using a script called ``consonance_fetch.py``. If you installed consonance using easy_install, then it should be present on your path. You can invoke the script as follows::
+    
+    consonance_fetch.py --projectpath="/path/to/my/django/project"
+
+The ``projectpath`` argument should contain the path to your django project, which is usually wherever your project's ``settings.py`` resides.
+
+Every time the script is run, it fetches the new updates for each of the users specified in the ``CONSONANCE_USERS``. You'll probably want to run this script periodically via a cron job or similar.
+
+**Be nice to FriendFeed's servers. You probably don't generate new content more than once every ten minutes. If you call consonance_fetch.py too often, eventually FriendFeed's API will throttle/ignore you.**
+
+If you want to see more about what ``consonance_fetch.py`` can do, run it as follows::
+    
+    consonance_fetch.py --help
+    
 
 History
 =======
@@ -57,3 +133,16 @@ In retrospect, Djangregator_ was a good learning experience. I'm glad I came ful
 .. _Djangregator: http://github.com/idangazit/djangregator/
 .. _oembed: http://oembed.com/
 .. _`django-oembed`: http://code.google.com/p/django-oembed/
+
+Naming
+------
+
+Going with the jazz themes of Django, and the fact that FriendFeed shines at pulling together the disparate elements of your online life:
+
+**CONSONANCE** | *ˈkänsənəns*
+
+*noun*
+
+agreement or compatibility between opinions or actions : *consonance between conservation measures and existing agricultural practice.*
+ * the recurrence of similar sounds, esp. consonants, in close proximity (chiefly as used in prosody).
+ * *Music* the combination of notes that are in harmony with each other due to the relationship between their frequencies.
