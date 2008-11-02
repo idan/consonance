@@ -47,22 +47,28 @@ CURRENT_PATH = os.path.realpath(os.path.dirname(__file__))
 usage = "usage: %prog [options]"
 parser = OptionParser(usage=usage)
 parser.add_option("-l", "--loglevel",
-                  dest="loglevel",
-                  help="Logging verbosity level, one of (DEBUG, INFO, WARNING, ERROR, FATAL) [default: %default]",
-                  default="INFO",
-                  metavar="LOGLEVEL")
+                    dest="loglevel",
+                    help="Logging verbosity level, one of (DEBUG, INFO, WARNING, ERROR, FATAL) [default: %default]",
+                    default="INFO",
+                    metavar="LOGLEVEL")
 parser.add_option("-p", "--projectpath",
-                  dest="projectpath",
-                  help="Path to the django project (the directory containing the settings.py file)",
-                  default=CURRENT_PATH,
-                  metavar="PATH"
-                  )
+                    dest="projectpath",
+                    help="Path to the django project (the directory containing the settings.py file)",
+                    default=CURRENT_PATH,
+                    metavar="PATH"
+                    )
 parser.add_option("-d", "--data",
-                  dest="pickledatafile",
-                  help="Path to a mock data file which should be used instead of accessing FriendFeed",
-                  default=None,
-                  metavar="PICKLEFILE"
-                  )
+                    dest="load_picklepath",
+                    help="Path to a mock data file which should be used instead of accessing FriendFeed",
+                    default=None,
+                    metavar="PICKLEFILE"
+                    )
+parser.add_option("-s", "--save",
+                    dest="save_picklepath",
+                    help="Save the data fetched from FriendFeed to a pickle file for later use with -d",
+                    default=None,
+                    metavar="PICKLEFILE"
+                    )
 
 (options, args) = parser.parse_args()
 
@@ -101,4 +107,7 @@ try:
 except ImportError:
     logger.critical("Unable to import Consonance, aborting.")
 else:
-    consonance.fetch(pickle_filepath=options.pickledatafile)
+    consonance.fetch(
+        load_picklepath=options.load_picklepath,
+        save_picklepath=options.save_picklepath
+    )

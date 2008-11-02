@@ -176,7 +176,7 @@ def process_entry(entry):
         process_media(entryobj, media)
             
 
-def fetch(pickle_filepath=None):
+def fetch(load_picklepath=None, save_picklepath=None):
     try:
         import friendfeed
     except ImportError:
@@ -191,21 +191,26 @@ def fetch(pickle_filepath=None):
                 settings.CONSONANCE_USERS.__len__())
     
     api = friendfeed.FriendFeed()
+    
+    if (settings.CONSONANCE_USERS.__len__() > 1) and (load_picklepath or save_picklepath):
+        logger.critical("The mock/pickle data functionality cannot work with multiple users in CONSONANCE_USERS. Aborting...")
+        return
+        
     for user in settings.CONSONANCE_USERS:
         
-        if pickle_filepath:
-            logger.debug("Attempting to use pickle data file at %s" % pickle_filepath)
+        if load_picklepath:
+            logger.debug("Attempting to use pickle data file at %s" % load_picklepath)
             try:
                 import pickle
-                pickle_file = open(pickle_filepath, 'rb')
-                raw = pickle.load(pickle_file)
+                load_picklefile = open(load_picklepath, 'rb')
+                raw = pickle.load(load_picklefile)
             except:
                 handle_exception(user, "attempted to use pickled data but failed.")
                 continue
             else:
                 logger.info("Using pickled data from file, not accessing FriendFeed!")
             finally:
-                pickle_file.close()
+                load_picklefile.close()
         else:
             try:
                 raw = api.fetch_user_feed(user)
@@ -216,6 +221,19 @@ def fetch(pickle_filepath=None):
         if not raw['entries']:
             logger.info('No activity available for user "%s".' % user)
             continue
+        
+        if save_picklepath:
+            try:
+                import pickle
+                save_picklefile = open(save_picklepath, 'wb')
+                pickle.dump(raw, save_picklefile)
+            except:
+                handle_exception(user, "failed to save pickle data")
+                continue
+            else:
+                logger.info("Successfully saved FriendFeed activity to pickle file %s" % save_picklepath)
+            finally:
+                save_picklefile.close()
         
         processed_ok = 0
         processed_fail = 0
