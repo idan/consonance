@@ -34,19 +34,19 @@ from setuptools import setup, find_packages
 setup(
     name = "consonance",
     version = "0.1.1",
-    packages = ["consonance"],
+    packages = find_packages(),
     author = "Idan Gazit",
     author_email = "idan@pixane.net",
     description = "A django app for consuming public FriendFeed streams.",
     url = "http://github.com/idangazit/consonance/",
     license = "BSD",
-    include_package_data = True,
     classifiers = [
         "Framework :: Django",
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
     ],
-    package_data = {"doc": ["*.rst", "*.html", "*.txt"]},
+    #package_data = {"": ["*.rst", "*.html", "*.txt", "ez_setup.py"]},
     scripts = ["consonance_fetch.py"],
+    include_package_data = True,
     )

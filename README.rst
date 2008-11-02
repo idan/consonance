@@ -51,11 +51,16 @@ It might work with python < 2.5 but I haven't tested and don't intend to. If som
 Getting Consonance
 ------------------
 
-**Using easy_install_**: run ``easy_install consonance`` from your favorite shell. The latest version of consonance will be fetched and installed from PyPI_.
+**Using easy_install**: run ``easy_install consonance`` from your favorite shell. The latest version of consonance will be fetched and installed from PyPI_. If you don't already have easy_install_, go get it.
 
 .. _easy_install: http://peak.telecommunity.com/DevCenter/EasyInstall
 .. _PyPI: http://pypi.python.org/pypi/consonance
 
+**Note**: the version of easy_install used to create the installer is 0.6c9. Sadly, python on the mac (leopard) comes bundled with 0.6c7 and this causes installation to fail even if you have a newer setuptools in your site_packages. Some googling has yielded this information_, but the short solution is to open your favorite terminal and upgrade the built-in easy_install script as follows::
+
+    sudo easy_install -s /usr/bin setuptools
+
+.. _information: http://andreasjacobsen.com/2008/10/10/using-python-setuptools-on-the-mac/
 
 **From source**: get yourself a copy of consonance from the homepage_. If you're comfortable with git, then clone yourself a copy. If you just want a tarball, click on the "download" button near the top of the page, download a .zip or tarball, and unpack it somewhere convenient. Either way, you should end up with a directory looking something like this::
 

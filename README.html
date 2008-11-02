@@ -317,7 +317,11 @@ ul.auto-toc {
 </div>
 <div class="section" id="getting-consonance">
 <h2>Getting Consonance</h2>
-<p><strong>Using easy_install_</strong>: run <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">consonance</span></tt> from your favorite shell. The latest version of consonance will be fetched and installed from <a class="reference external" href="http://pypi.python.org/pypi/consonance">PyPI</a>.</p>
+<p><strong>Using easy_install</strong>: run <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">consonance</span></tt> from your favorite shell. The latest version of consonance will be fetched and installed from <a class="reference external" href="http://pypi.python.org/pypi/consonance">PyPI</a>. If you don't already have <a class="reference external" href="http://peak.telecommunity.com/DevCenter/EasyInstall">easy_install</a>, go get it.</p>
+<p><strong>Note</strong>: the version of easy_install used to create the installer is 0.6c9. Sadly, python on the mac (leopard) comes bundled with 0.6c7 and this causes installation to fail even if you have a newer setuptools in your site_packages. Some googling has yielded this <a class="reference external" href="http://andreasjacobsen.com/2008/10/10/using-python-setuptools-on-the-mac/">information</a>, but the short solution is to open your favorite terminal and upgrade the built-in easy_install script as follows:</p>
+<pre class="literal-block">
+sudo easy_install -s /usr/bin setuptools
+</pre>
 <p><strong>From source</strong>: get yourself a copy of consonance from the <a class="reference external" href="http://github.com/idangazit/consonance">homepage</a>. If you're comfortable with git, then clone yourself a copy. If you just want a tarball, click on the &quot;download&quot; button near the top of the page, download a .zip or tarball, and unpack it somewhere convenient. Either way, you should end up with a directory looking something like this:</p>
 <pre class="literal-block">
 consonance
