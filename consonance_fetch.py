@@ -57,6 +57,12 @@ parser.add_option("-p", "--projectpath",
                   default=CURRENT_PATH,
                   metavar="PATH"
                   )
+parser.add_option("-d", "--data",
+                  dest="pickledatafile",
+                  help="Path to a mock data file which should be used instead of accessing FriendFeed",
+                  default=None,
+                  metavar="PICKLEFILE"
+                  )
 
 (options, args) = parser.parse_args()
 
@@ -95,4 +101,4 @@ try:
 except ImportError:
     logger.critical("Unable to import Consonance, aborting.")
 else:
-    consonance.fetch()
+    consonance.fetch(pickle_filepath=options.pickledatafile)

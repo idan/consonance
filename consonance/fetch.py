@@ -119,7 +119,7 @@ def process_entry(entry):
     
     # skip if already exists and not updated
     if not created:
-        if entry['updated'] == entry_obj.updated:
+        if entry['updated'] == entryobj.updated:
             return
     
     # basic fields
@@ -176,7 +176,7 @@ def process_entry(entry):
         process_media(entryobj, media)
             
 
-def fetch():
+def fetch(pickle_filepath=None):
     try:
         import friendfeed
     except ImportError:
@@ -192,26 +192,41 @@ def fetch():
     
     api = friendfeed.FriendFeed()
     for user in settings.CONSONANCE_USERS:
-        try:
-            raw = api.fetch_user_feed(user)
-            #import pickle
-            #pickle_file = open('ffdata.pickle', 'rb')
-            #raw = pickle.load(pickle_file)
-        except:
-            handle_exception(user, "failed to fetch activity")
-            continue
-        finally:
-            pickle_file.close()
+        
+        if pickle_filepath:
+            logger.debug("Attempting to use pickle data file at %s" % pickle_filepath)
+            try:
+                import pickle
+                pickle_file = open(pickle_filepath, 'rb')
+                raw = pickle.load(pickle_file)
+            except:
+                handle_exception(user, "attempted to use pickled data but failed.")
+                continue
+            else:
+                logger.info("Using pickled data from file, not accessing FriendFeed!")
+            finally:
+                pickle_file.close()
+        else:
+            try:
+                raw = api.fetch_user_feed(user)
+            except:
+                handle_exception(user, "failed to fetch activity")
+                continue
         
         if not raw['entries']:
             logger.info('No activity available for user "%s".' % user)
             continue
         
+        processed_ok = 0
+        processed_fail = 0
+        
         for entry in raw['entries']:
             try:
                 process_entry(entry)
+                processed_ok += 1
             except:
                 handle_exception(user, "failed to process entry")
+                processed_fail += 1
                 continue
     
-    logger.info('Fetch complete.')
+    logger.info('Fetch complete. Processed %i OK / %i Failed.' % (processed_ok, processed_fail))
