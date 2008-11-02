@@ -33,7 +33,7 @@ ez_setup.use_setuptools()
 from setuptools import setup, find_packages
 setup(
     name = "consonance",
-    version = "0.1",
+    version = "0.1.1",
     packages = ["consonance"],
     author = "Idan Gazit",
     author_email = "idan@pixane.net",
