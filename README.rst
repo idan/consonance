@@ -144,10 +144,8 @@ Naming
 
 Going with the jazz themes of Django, and the fact that FriendFeed shines at pulling together the disparate elements of your online life:
 
-**CONSONANCE** | *ˈkänsənəns*
+**CONSONANCE** | *noun*
 
-*noun*
-
-agreement or compatibility between opinions or actions : *consonance between conservation measures and existing agricultural practice.*
+agreement or compatibility between opinions or actions: *consonance between conservation measures and existing agricultural practice.*
  * the recurrence of similar sounds, esp. consonants, in close proximity (chiefly as used in prosody).
  * *Music* the combination of notes that are in harmony with each other due to the relationship between their frequencies.
