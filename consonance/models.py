@@ -98,10 +98,10 @@ class Entry(models.Model):
     updated = models.DateTimeField(blank=True, null=True)
     hidden = models.BooleanField(default=False)
     anonymous = models.BooleanField(default=False)
-    user = models.ForeignKey(User)
-    service = models.ForeignKey(Service)
-    via = models.ForeignKey(Via, blank=True, null=True)
-    room = models.ForeignKey(Room, blank=True, null=True)
+    user = models.ForeignKey(User, related_name="entries")
+    service = models.ForeignKey(Service, related_name="entries")
+    via = models.ForeignKey(Via, blank=True, null=True, related_name="entries")
+    room = models.ForeignKey(Room, blank=True, null=True, related_name="entries")
     
     class Meta:
         ordering = ["-published"]
@@ -114,8 +114,8 @@ class Entry(models.Model):
 class Like(models.Model):
     """A FriendFeed 'Like'."""
     date = models.DateTimeField(blank=False, null=False)
-    user = models.ForeignKey(User)
-    entry = models.ForeignKey(Entry)
+    user = models.ForeignKey(User, related_name="likes")
+    entry = models.ForeignKey(Entry, related_name="likes")
     
     class Meta:
         ordering = ["-date"]
@@ -130,8 +130,8 @@ class Comment(models.Model):
     id = models.CharField(blank=False, primary_key=True, max_length=36)
     date = models.DateTimeField(blank=True, null=True)
     body = models.TextField(blank=True)
-    user = models.ForeignKey(User)
-    entry = models.ForeignKey(Entry)
+    user = models.ForeignKey(User, related_name="comments")
+    entry = models.ForeignKey(Entry, related_name="comments")
     
     class Meta:
         ordering = ["-date"]
@@ -146,7 +146,7 @@ class Media(models.Model):
     title = models.CharField(blank=True, max_length=255)
     player = models.URLField(blank=True, null=True, verify_exists=False, max_length=255)
     link = models.URLField(blank=False, verify_exists=False, max_length=255)
-    entry = models.ForeignKey(Entry)
+    entry = models.ForeignKey(Entry, related_name="medias")
     
     class Meta:
         ordering = ["title", "link"]
@@ -161,7 +161,7 @@ class Thumbnail(models.Model):
     url = models.URLField(blank=False, verify_exists=False, max_length=255)
     width = models.IntegerField(blank=False, null=False)
     height = models.IntegerField(blank=False, null=False)
-    media = models.ForeignKey(Media)
+    media = models.ForeignKey(Media, related_name="thumbnails")
     
     class Meta:
         ordering = ["url"]
@@ -177,7 +177,7 @@ class Content(models.Model):
     mimetype = models.CharField(blank=True, max_length=80)
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
-    media = models.ForeignKey(Media)
+    media = models.ForeignKey(Media, related_name="contents")
     
     class Meta:
         ordering = ["url"]
@@ -192,7 +192,7 @@ class Enclosure(models.Model):
     url = models.URLField(blank=False, verify_exists=False, max_length=255)
     mimetype = models.CharField(blank=True, max_length=80)
     length = models.CharField(blank=True, max_length=80) # TODO: Have no idea about the datatype here.
-    media = models.ForeignKey(Media)
+    media = models.ForeignKey(Media, related_name="enclosures")
     
     class Meta:
         ordering = ["url"]
