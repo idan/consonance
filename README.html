@@ -376,8 +376,6 @@ consonance_fetch.py --help
 <li>Does it for a heckuva lot more services than the three I cobbled together</li>
 <li>And probably does it in a more robust, bug-free fashion given their userbase</li>
 <li>Probably doesn't need to worry about API rate-limiting as it's a big-name consumer</li>
-<li>Hands me the kind of embeddable media info I would have to use oembed for...</li>
-<li>... but also gives it to me for services that don't support oembed (I'm lookin' at you, YouTube)</li>
 <li>Deals with batching!</li>
 <li>Deals with service-specific date and time parsing (WTF? Can't everybody just agree on ISO8601?)</li>
 <li>For that matter, gives all datetimes normalized to UTC</li>
@@ -385,6 +383,7 @@ consonance_fetch.py --help
 </ul>
 </dd>
 </dl>
+<p><strong>Update: Sadly it seems that &quot;enclosures&quot; doesn't contain the embed HTML. Looking into doing it with django-oembed, but that seems to be broken too.</strong></p>
 <p>In retrospect, <a class="reference external" href="http://github.com/idangazit/djangregator/">Djangregator</a> was a good learning experience. I'm glad I came full-circle, though. Thank you FriendFeed!</p>
 <div class="section" id="naming">
 <h2>Naming</h2>

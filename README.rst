@@ -126,12 +126,12 @@ It turns out that FriendFeed already:
  * Does it for a heckuva lot more services than the three I cobbled together
  * And probably does it in a more robust, bug-free fashion given their userbase
  * Probably doesn't need to worry about API rate-limiting as it's a big-name consumer
- * Hands me the kind of embeddable media info I would have to use oembed for...
- * ... but also gives it to me for services that don't support oembed (I'm lookin' at you, YouTube)
  * Deals with batching!
  * Deals with service-specific date and time parsing (WTF? Can't everybody just agree on ISO8601?)
  * For that matter, gives all datetimes normalized to UTC
  * Makes tea and fetches your slippers
+ 
+**Update: Sadly it seems that "enclosures" doesn't contain the embed HTML. Looking into doing it with django-oembed, but that seems to be broken too.**
  
 In retrospect, Djangregator_ was a good learning experience. I'm glad I came full-circle, though. Thank you FriendFeed!
 
