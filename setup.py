@@ -53,7 +53,7 @@ setup(
     
     .. _FriendFeed: http://www.friendfeed.com
     .. _FriendFeed API Documentation: http://code.google.com/p/friendfeed-api/wiki/ApiDocumentation
-    """
+    """,
     url = "http://github.com/idangazit/consonance/",
     license = "BSD",
     classifiers = [
