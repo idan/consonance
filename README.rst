@@ -27,7 +27,7 @@ Consonance is yours to use, modify, and redistribute according to the terms of t
 Consonance is hosted on github_, with issuetracking supplied by the equally-lovely lighthouse_. It is ridiculously easy to contribute code, and it is ridiculously easy to fork off your own branch.
 
 * Homepage & Source: http://github.com/idangazit/consonance
-* Issuetracker: http://http://pixane.lighthouseapp.com/projects/18943-consonance/
+* Issuetracker: http://pixane.lighthouseapp.com/projects/18943-consonance
 
 .. _github: http://www.github.com
 .. _lighthouse: http://www.lighthouseapp.com/
