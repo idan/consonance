@@ -66,6 +66,7 @@ Getting Consonance
 
     consonance
     |- LICENSE.txt
+    |- CHANGES.rst
     |- README.rst
     |- README.html
     |- consonance_fetch.py
@@ -90,14 +91,60 @@ Using Consonance
 
 Make sure to add consonance to the ``INSTALLED_APPS`` list in ``settings.py``.
 
-Consonance will look for a list or tuple of friendfeed usernames called ``CONSONANCE_USERS`` in your project's ``settings.py``::
+**New in 0.2:** Consonance will look for a dictionary of friendfeed usernames called ``CONSONANCE_USERS`` in your project's ``settings.py``::
     
-    CONSONANCE_USERS = (
-        'joe_user',
-        'jane_user',
-    )
+    CONSONANCE_USERS = {
+        'user1' : {},
+    }
+
 
 Make sure to add at least one name to ``CONSONANCE_USERS``.
+
+Filtering Entries Received from FriendFeed
+------------------------------------------
+
+Consonance can selectively ignore certain entries it receives from friendfeed. Familiarizing yourself with the `FriendFeed API Documentation`_ is necessary,
+in particular the description of the `JSON feed format`_.
+
+.. _`JSON feed format`: http://code.google.com/p/friendfeed-api/wiki/ApiDocumentation#Feed_Formats
+
+Filtering works by specifying a "path" to some child of a friendfeed entry, and specifying a list of patterns. If the child exists, and one of the patterns match, then that entire entry will be skipped during fetch. The patterns are any pattern accepted as input to Python's ``re`` (regular expression) module.
+
+An example here is worth a thousand words. Say you want to exclude all twitter updates from the entries you're fetching from To use filtering. Alter your ``CONSONANCE_USERS`` to read as follows::
+
+    CONSONANCE_USERS = {
+        'myusername' : {
+            "service.name" : ["Twitter",],
+        }
+    }
+
+You can easily specify multiple rules; an entry is filtered if *any* of them match::
+
+    CONSONANCE_USERS = {
+        'myusername' : {
+            "service.name" : ["Flickr"],
+            "anonymous" : [True],
+            "hidden" : [False],
+            "link" : ["^http://twitter.com/*"],
+        }
+    }
+
+The following is a list of valid path specifiers:
+ * id
+ * title
+ * link
+ * published
+ * updated
+ * hidden
+ * anonymous
+ * user.id, user.name, user.nickname, user.profileUrl
+ * service.id, service.name, service.iconUrl, service.profileUrl
+ * via.name, via.url
+ * room.id, room.name, room.nickname, room.url
+
+
+Fetching Entries from FriendFeed
+--------------------------------
 
 Consonance *does not* perform fetches automatically. You've got to do it yourself, using a script called ``consonance_fetch.py``. If you installed consonance using easy_install, then it should be present on your path. You can invoke the script as follows::
     

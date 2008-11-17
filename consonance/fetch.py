@@ -33,16 +33,23 @@ from django.core.exceptions import ImproperlyConfigured
 from consonance.models import *
 import logging
 import sys
+import re
 
 logger = logging.getLogger("Fetch")
 
+def get_generic_exc_info(exc_type, exc_value):
+    return '%s: "%s"' % (
+        exc_type.__name__,
+        exc_value if exc_value else "no additional information",
+    )
+
 def handle_exception(user, errortext):
     exc_type, exc_value = sys.exc_info()[:2]
-    logger.exception('User "%s": %s: %s: "%s"' % 
-    (user,
-    errortext,
-    exc_type.__name__,
-    exc_value if exc_value else "no additional information"))
+    logger.exception('User "%s": %s: %s' % (
+        user,
+        errortext,
+        get_generic_exc_info(exc_type, exc_value)
+    ))
 
 def process_user(rawuser):
     user, usercreated = User.objects.get_or_create(id=rawuser['id'])
@@ -96,9 +103,84 @@ def process_media(entry, rawmedia):
     
     return mediaobj
     
+def dict_pathsearch(dict, path):
+    """
+    Finds a value inside a dictionary of dictionaries given a path-like string
+    of keys separated by periods. Raises KeyError if the requested path
+    doesn't exist.
+    
+    Example
+    -------
+    
+    Given a dictionary like the following:
+    
+    {
+        foo : "foo"
+        bar : "bar"
+        baz : {
+            bling: "bling"
+            spam: {
+                eggs: "eggs"
+                ham: "ham"
+            }
+        } 
+    }
+    
+    and a path like:
+    
+    dict_pathsearch(dict, "baz.spam.ham") returns "ham"
+    dict_pathsearch(dict, "foo") returns "foo"
+    dict_pathsearch(dict, "baz.bling") returns "bling"
+    dict_pathsearch(dict, "python") raises KeyError
+    """
+    pathchunks = path.split('.')
+    current = dict
+    for chunk in pathchunks:
+        if chunk in current:
+            current = current[chunk]
+        else:
+            raise KeyError
+    return current
 
-def process_entry(entry):
+def process_entry(entry, userdict={}):
+    """
+    Process a single raw FriendFeed entry. Returns True if the entry was
+    processed, False if the entry was skipped due to filtering rules.
+    
+    process_entry takes two arguments: a raw entry dict, and a "userdict",
+    which is a dictionary of friendfeed-user-specific settings which is defined
+    in CONSONANCE_USERS (in the project settings).
+    
+    Currently the main use of the userdict is to allow filtering of the
+    FriendFeed entries. See the Consonance README for a detailed explanation
+    of the required format of CONSONANCE_USERS.
+    """
+    
     logger.debug("Processing entry %s" % entry['id'])
+    
+    # skip entry if there's a matching exclusion rule
+    for rule in userdict.keys():
+        try:
+            # Find the value referenced by the rule
+            value = dict_pathsearch(entry, rule)
+        except KeyError:
+            logger.debug("Exclusion rule \"%s\" references nonexistant path. Continuing..." % rule)
+        except:
+            exc_type, exc_value = sys.exc_info()[:2]
+            logger.debug("Unable to process exclusion rule: %s. Continuing..." %
+                get_generic_exc_info(exc_type, exc_value))
+        else:
+            for pattern in userdict[rule]:
+                try:
+                    if re.match(pattern.__str__(), value.__str__()) is not None:
+                        # rule matched, skip this entry, return
+                        logger.debug("Exclusion rule \"%s : %s\" matched, skipping!" % (rule, pattern))
+                        return False
+                except:
+                    exc_type, exc_value = sys.exc_info()[:2]
+                    logger.debug("Exclusion rule found but could not be processed: %s. Continuing..." % (
+                        get_generic_exc_info(exc_type, exc_value)))
+        
     
     # fk user field
     user = process_user(entry['user'])
@@ -120,7 +202,7 @@ def process_entry(entry):
     # skip if already exists and not updated
     if not created:
         if entry['updated'] == entryobj.updated:
-            return
+            return True
     
     # basic fields
     entryobj.title = entry['title']
@@ -174,7 +256,8 @@ def process_entry(entry):
     # media
     for media in entry['media']:
         process_media(entryobj, media)
-            
+    
+    return True
 
 def fetch(load_picklepath=None, save_picklepath=None):
     try:
@@ -196,7 +279,7 @@ def fetch(load_picklepath=None, save_picklepath=None):
         logger.critical("The mock/pickle data functionality cannot work with multiple users in CONSONANCE_USERS. Aborting...")
         return
         
-    for user in settings.CONSONANCE_USERS:
+    for user in settings.CONSONANCE_USERS.keys():
         
         if load_picklepath:
             logger.debug("Attempting to use pickle data file at %s" % load_picklepath)
@@ -236,15 +319,20 @@ def fetch(load_picklepath=None, save_picklepath=None):
                 save_picklefile.close()
         
         processed_ok = 0
+        processed_skip = 0
         processed_fail = 0
         
         for entry in raw['entries']:
             try:
-                process_entry(entry)
-                processed_ok += 1
+                if process_entry(entry, settings.CONSONANCE_USERS[user]):
+                    processed_ok += 1
+                else:
+                    processed_skip += 1
             except:
                 handle_exception(user, "failed to process entry")
                 processed_fail += 1
                 continue
     
-    logger.info('Fetch complete. Processed %i OK / %i Failed.' % (processed_ok, processed_fail))
+    logger.info('Fetch complete. Processed %i OK / %i Skipped / %i Failed.' % (
+        processed_ok, processed_skip, processed_fail
+    ))
