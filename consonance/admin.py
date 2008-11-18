@@ -59,6 +59,11 @@ class EntryAdmin(admin.ModelAdmin):
         CommentInline,
         MediaInline,
     ]
+    list_display = ['user', 'service', 'published', 'title']
+    list_display_links = ['title',]
+    list_filter = ['user', 'service', 'published']
+    search_fields = ['title', ]
+    
 admin.site.register(Entry, EntryAdmin)
 
 
@@ -80,4 +85,7 @@ class MediaAdmin(admin.ModelAdmin):
         ThumbnailInline,
         EnclosureInline,
     ]
+    list_display = ['title', 'entry', 'link',]
+    list_display_links = ['title',]
+    search_fields = ['title', 'entry', 'link',]
 admin.site.register(Media, MediaAdmin)
