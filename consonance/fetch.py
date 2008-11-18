@@ -202,6 +202,7 @@ def process_entry(entry, userdict={}):
     # skip if already exists and not updated
     if not created:
         if entry['updated'] == entryobj.updated:
+            logger.debug('Entry already cached, no new updates.')
             return True
     
     # basic fields
