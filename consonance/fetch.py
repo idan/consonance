@@ -66,30 +66,32 @@ def process_media(entry, rawmedia):
         link=rawmedia['link'],
         entry=entry)
     if mediacreated:
-        if 'title' in rawmedia:
+        if 'title' in rawmedia and rawmedia['title'] is not None:
             mediaobj.title = rawmedia['title']
-        if 'player' in rawmedia:
+        if 'player' in rawmedia and rawmedia['player'] is not None:
             mediaobj.player = rawmedia['player']
     mediaobj.save()
     
-    for thumbnail in rawmedia['thumbnails']:
-        thumbobj, thumbcreated = Thumbnail.objects.get_or_create(
-            url=thumbnail['url'],
-            width=thumbnail['width'],
-            height=thumbnail['height'],
-            media=mediaobj)
-        thumbobj.save()
-    
-    for content in rawmedia['content']:
-        logger.debug(content)
-        contentobj, contentcreated = Content.objects.get_or_create(
-            url=content['url'],
-            media=mediaobj)
-        if contentcreated:
-            contentobj.mimetype = content['type']
-            contentobj.width = content['width']
-            contentobj.height = content['height']
-        contentobj.save()
+    if 'thumbnails' in rawmedia and rawmedia['thumbnails'] is not None:
+        for thumbnail in rawmedia['thumbnails']:
+            thumbobj, thumbcreated = Thumbnail.objects.get_or_create(
+                url=thumbnail['url'],
+                width=thumbnail['width'],
+                height=thumbnail['height'],
+                media=mediaobj)
+            thumbobj.save()
+
+    if 'content' in rawmedia and rawmedia['content'] is not None:
+        for content in rawmedia['content']:
+            logger.debug(content)
+            contentobj, contentcreated = Content.objects.get_or_create(
+                url=content['url'],
+                media=mediaobj)
+            if contentcreated:
+                contentobj.mimetype = content['type']
+                contentobj.width = content['width']
+                contentobj.height = content['height']
+            contentobj.save()
     
     if 'enclosures' in rawmedia and rawmedia['enclosures'] is not None:
         for enclosure in rawmedia['enclosures']:
