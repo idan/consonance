@@ -43,6 +43,9 @@ def get_generic_exc_info(exc_type, exc_value):
         exc_value if exc_value else "no additional information",
     )
 
+def validate(d, k):
+    return k in d and d[k] is not None
+
 def handle_exception(user, errortext):
     exc_type, exc_value = sys.exc_info()[:2]
     logger.exception('User "%s": %s: %s' % (
@@ -54,9 +57,12 @@ def handle_exception(user, errortext):
 def process_user(rawuser):
     user, usercreated = User.objects.get_or_create(uuid=rawuser['id'])
     if usercreated:
-        user.name = rawuser['name']
-        user.nickname = rawuser['nickname']
-        user.profileurl = rawuser['profileUrl']
+        if validate(rawuser, 'name'):
+            user.name = rawuser['name']
+        if validate(rawuser, 'nickname'):
+            user.nickname = rawuser['nickname']
+        if validate(rawuser, 'profileUrl'):
+            user.profileurl = rawuser['profileUrl']
         user.save()
     return user
 
@@ -66,13 +72,13 @@ def process_media(entry, rawmedia):
         link=rawmedia['link'],
         entry=entry)
     if mediacreated:
-        if 'title' in rawmedia and rawmedia['title'] is not None:
+        if validate(rawmedia, 'title'):
             mediaobj.title = rawmedia['title']
-        if 'player' in rawmedia and rawmedia['player'] is not None:
+        if validate(rawmedia, 'player'):
             mediaobj.player = rawmedia['player']
     mediaobj.save()
     
-    if 'thumbnails' in rawmedia and rawmedia['thumbnails'] is not None:
+    if validate(rawmedia, 'thumbnails'):
         for thumbnail in rawmedia['thumbnails']:
             thumbobj, thumbcreated = Thumbnail.objects.get_or_create(
                 url=thumbnail['url'],
@@ -80,27 +86,32 @@ def process_media(entry, rawmedia):
                 height=thumbnail['height'],
                 media=mediaobj)
             thumbobj.save()
-
-    if 'content' in rawmedia and rawmedia['content'] is not None:
+    
+    if validate(rawmedia, 'content'):
         for content in rawmedia['content']:
             logger.debug(content)
             contentobj, contentcreated = Content.objects.get_or_create(
                 url=content['url'],
                 media=mediaobj)
             if contentcreated:
-                contentobj.mimetype = content['type']
-                contentobj.width = content['width']
-                contentobj.height = content['height']
+                if validate(content, 'type'):
+                    contentobj.mimetype = content['type']
+                if validate(content, 'width'):
+                    contentobj.width = content['width']
+                if validate(content, 'height'):
+                    contentobj.height = content['height']
             contentobj.save()
     
-    if 'enclosures' in rawmedia and rawmedia['enclosures'] is not None:
+    if validate(rawmedia, 'enclosures'):
         for enclosure in rawmedia['enclosures']:
             enclosureobj, enclosurecreated = Enclosure.objects.get_or_create(
                 url=enclosure['url'],
                 media=mediaobj)
             if enclosurecreated:
-                enclosureobj.mimetype = enclosure['type']
-                enclosureobj.length = enclosure['length']
+                if validate(enclosure, 'type'):
+                    enclosureobj.mimetype = enclosure['type']
+                if validate(enclosure, 'length'):
+                    enclosureobj.length = enclosure['length']
             enclosureobj.save()
     
     return mediaobj
