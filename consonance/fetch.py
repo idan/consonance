@@ -52,7 +52,7 @@ def handle_exception(user, errortext):
     ))
 
 def process_user(rawuser):
-    user, usercreated = User.objects.get_or_create(id=rawuser['id'])
+    user, usercreated = User.objects.get_or_create(uuid=rawuser['id'])
     if usercreated:
         user.name = rawuser['name']
         user.nickname = rawuser['nickname']
@@ -189,7 +189,7 @@ def process_entry(entry, userdict={}):
     
     # fk service field
     service, servicecreated = Service.objects.get_or_create(
-        id=entry['service']['id'])
+        uuid=entry['service']['id'])
     if servicecreated:
         service.name = entry['service']['name']
         service.iconurl = entry['service']['iconUrl']
@@ -197,7 +197,7 @@ def process_entry(entry, userdict={}):
         service.save()
     
     entryobj, created = Entry.objects.get_or_create(
-        id=entry['id'],
+        uuid=entry['id'],
         user=user,
         service=service)
     
@@ -225,7 +225,8 @@ def process_entry(entry, userdict={}):
     
     # fk room field, if present
     if 'room' in entry:
-        room, roomcreated = Room.objects.get_or_create(id=entry['room']['id'])
+        room, roomcreated = Room.objects.get_or_create(
+            uuid=entry['room']['id'])
         if roomcreated:
             room.name = entry['room']['name']
             room.nickname = entry['room']['nickname']
@@ -239,7 +240,7 @@ def process_entry(entry, userdict={}):
     for comment in entry['comments']:
         commentuser = process_user(comment['user'])
         commentobj, commentcreated = Comment.objects.get_or_create(
-            id=comment['id'],
+            uuid=comment['id'],
             user=commentuser,
             entry=entryobj)
         if commentcreated:

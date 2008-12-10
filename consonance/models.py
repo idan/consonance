@@ -29,11 +29,12 @@
 
 
 from django.db import models
+from django.template.loader import render_to_string
 
 
 class User(models.Model):
     """A FriendFeed User."""
-    id = models.CharField(blank=False, primary_key=True, max_length=36)
+    uuid = models.CharField(blank=False, null=False, unique=True, max_length=36)
     name = models.CharField(blank=True, max_length=80)
     nickname = models.CharField(blank=True, max_length=80)
     profileurl = models.URLField(blank=True, verify_exists=False, max_length=255)
@@ -48,7 +49,7 @@ class User(models.Model):
 
 class Service(models.Model):
     """A FriendFeed Service."""
-    id = models.CharField(blank=False, primary_key=True, max_length=36)
+    uuid = models.CharField(blank=False, null=False, unique=True, max_length=36)
     name = models.CharField(blank=True, max_length=80)
     iconurl = models.URLField(blank=True, verify_exists=False, max_length=255)
     profileurl = models.URLField(blank=True, verify_exists=False, max_length=255)
@@ -76,7 +77,7 @@ class Via(models.Model):
 
 class Room(models.Model):
     """A FriendFeed Room"""
-    id = models.CharField(blank=False, primary_key=True, max_length=36)
+    uuid = models.CharField(blank=False, null=False, unique=True, max_length=36)
     name = models.CharField(blank=True, max_length=80)
     nickname = models.CharField(blank=True, max_length=80)
     url = models.URLField(blank=True, verify_exists=False, max_length=255)
@@ -91,7 +92,7 @@ class Room(models.Model):
 
 class Entry(models.Model):
     """Represents a single friendfeed activity entry."""
-    id = models.CharField(blank=False, primary_key=True, max_length=36)
+    uuid = models.CharField(blank=False, null=False, unique=True, max_length=36)
     title = models.CharField(blank=True, max_length=255)
     link = models.URLField(blank=True, verify_exists=False, max_length=255)
     published = models.DateTimeField(blank=True, null=True)
@@ -109,6 +110,9 @@ class Entry(models.Model):
     
     def __unicode__(self):
         return self.title or self.id
+    
+    def get_rendered_html(self):
+        pass
 
 
 class Like(models.Model):
@@ -127,7 +131,7 @@ class Like(models.Model):
 
 class Comment(models.Model):
     """A FriendFeed comment."""
-    id = models.CharField(blank=False, primary_key=True, max_length=36)
+    uuid = models.CharField(blank=False, null=False, unique=True, max_length=36)
     date = models.DateTimeField(blank=True, null=True)
     body = models.TextField(blank=True)
     user = models.ForeignKey(User, related_name="comments")
