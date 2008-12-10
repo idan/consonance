@@ -299,14 +299,15 @@ def fetch(load_picklepath=None, save_picklepath=None):
         if load_picklepath:
             logger.debug("Attempting to use pickle data file at %s" % load_picklepath)
             try:
-                import pickle
-                load_picklefile = open(load_picklepath, 'rb')
-                raw = pickle.load(load_picklefile)
-            except:
-                handle_exception(user, "attempted to use pickled data but failed.")
-                continue
-            else:
-                logger.info("Using pickled data from file, not accessing FriendFeed!")
+                try:
+                    import pickle
+                    load_picklefile = open(load_picklepath, 'rb')
+                    raw = pickle.load(load_picklefile)
+                except:
+                    handle_exception(user, "attempted to use pickled data but failed.")
+                    continue
+                else:
+                    logger.info("Using pickled data from file, not accessing FriendFeed!")
             finally:
                 load_picklefile.close()
         else:
@@ -322,14 +323,15 @@ def fetch(load_picklepath=None, save_picklepath=None):
         
         if save_picklepath:
             try:
-                import pickle
-                save_picklefile = open(save_picklepath, 'wb')
-                pickle.dump(raw, save_picklefile)
-            except:
-                handle_exception(user, "failed to save pickle data")
-                continue
-            else:
-                logger.info("Successfully saved FriendFeed activity to pickle file %s" % save_picklepath)
+                try:
+                    import pickle
+                    save_picklefile = open(save_picklepath, 'wb')
+                    pickle.dump(raw, save_picklefile)
+                except:
+                    handle_exception(user, "failed to save pickle data")
+                    continue
+                else:
+                    logger.info("Successfully saved FriendFeed activity to pickle file %s" % save_picklepath)
             finally:
                 save_picklefile.close()
         
