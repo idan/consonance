@@ -89,18 +89,25 @@ def process_media(entry, rawmedia):
     
     if validate(rawmedia, 'content'):
         for content in rawmedia['content']:
-            logger.debug(content)
-            contentobj, contentcreated = Content.objects.get_or_create(
-                url=content['url'],
-                media=mediaobj)
-            if contentcreated:
-                if validate(content, 'type'):
-                    contentobj.mimetype = content['type']
-                if validate(content, 'width'):
-                    contentobj.width = content['width']
-                if validate(content, 'height'):
-                    contentobj.height = content['height']
-            contentobj.save()
+            logger.debug("Content: %s" % content)
+            try:
+                contentobj, contentcreated = Content.objects.get_or_create(
+                    url=content['url'],
+                    media=mediaobj)
+                if contentcreated:
+                    if validate(content, 'type'):
+                        contentobj.mimetype = content['type']
+                    if validate(content, 'width'):
+                        contentobj.width = content['width']
+                    if validate(content, 'height'):
+                        contentobj.height = content['height']
+                contentobj.save()
+            except KeyError:
+                exc_type, exc_value = sys.exc_info()[:2]
+                logger.warn("Unable to process content block in media %s: %s. Skipping..." % (
+                    rawmedia['link'],
+                    get_generic_exc_info(exc_type, exc_value)
+                ))
     
     if validate(rawmedia, 'enclosures'):
         for enclosure in rawmedia['enclosures']:
